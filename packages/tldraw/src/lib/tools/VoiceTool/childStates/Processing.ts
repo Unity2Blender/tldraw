@@ -10,7 +10,7 @@ export class Processing extends StateNode {
 	static override id = 'processing'
 
 	override async onEnter(info: ProcessingInfo) {
-		this.editor.setCursor({ type: 'wait', rotation: 0 })
+		this.editor.setCursor({ type: 'default', rotation: 0 })
 
 		const apiKey = getVoiceApiKey()
 		const model = getVoiceModel()
