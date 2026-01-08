@@ -410,8 +410,14 @@ export function AssetUrlsProvider({ assetUrls, children, }: {
 // @public
 export class AudioRecorder {
     cancel(): void;
-    start(): Promise<void>;
-    stop(): Promise<Blob>;
+    start(onChunk?: OnChunkCallback): Promise<void>;
+    stop(): Promise<AudioRecordingResult>;
+}
+
+// @public
+export interface AudioRecordingResult {
+    blob: Blob;
+    chunks: Blob[];
 }
 
 // @public (undocumented)
@@ -538,6 +544,9 @@ export function centerSelectionAroundPoint(editor: Editor, position: VecLike): v
 
 // @public (undocumented)
 export function CheckBoxToolbarItem(): JSX.Element;
+
+// @public
+export type ChunkMergeMode = 'individual' | 'merged';
 
 // @public
 export function clearArrowTargetState(editor: Editor): void;
@@ -1086,7 +1095,7 @@ export interface DefaultToolbarProps {
 }
 
 // @public (undocumented)
-export const defaultTools: readonly [typeof EraserTool, typeof HandTool, typeof LaserTool, typeof VoiceTool, typeof ZoomTool, typeof SelectTool];
+export const defaultTools: readonly [typeof EraserTool, typeof HandTool, typeof LaserTool, typeof ZoomTool, typeof SelectTool];
 
 // @public (undocumented)
 export const DefaultVideoToolbar: NamedExoticComponent<TLUiVideoToolbarProps>;
@@ -1867,6 +1876,9 @@ export function getUncroppedSize(shapeSize: {
 export function getVoiceApiKey(): null | string;
 
 // @public
+export function getVoiceChunkMergeMode(): ChunkMergeMode;
+
+// @public
 export function getVoiceModel(): GeminiModelId;
 
 // @public (undocumented)
@@ -1976,6 +1988,16 @@ export class HighlightShapeUtil extends ShapeUtil<TLHighlightShape> {
 // @public (undocumented)
 export function HighlightToolbarItem(): JSX.Element;
 
+// @public
+export interface IAudioRecorder {
+    // (undocumented)
+    cancel(): void;
+    // (undocumented)
+    start(onChunk?: OnChunkCallback): Promise<void>;
+    // (undocumented)
+    stop(): Promise<AudioRecordingResult>;
+}
+
 // @public (undocumented)
 export class ImageShapeUtil extends BaseBoxShapeUtil<TLImageShape> {
     // (undocumented)
@@ -2008,6 +2030,12 @@ export class ImageShapeUtil extends BaseBoxShapeUtil<TLImageShape> {
     toSvg(shape: TLImageShape, ctx: SvgExportContext): Promise<JSX.Element | null>;
     // (undocumented)
     static type: "image";
+}
+
+// @public
+export interface ITranscriptionService {
+    // (undocumented)
+    transcribe(audioBlob: Blob, apiKey: string, model: string, signal?: AbortSignal): Promise<string>;
 }
 
 // @public (undocumented)
@@ -2318,6 +2346,9 @@ export function notifyIfFileNotAllowed(file: File, options: TLDefaultExternalCon
 export function OfflineIndicator(): JSX.Element;
 
 // @public
+export type OnChunkCallback = (chunk: Blob, index: number) => void;
+
+// @public
 export function onDragFromToolbarToCreateShape(editor: Editor, info: TLPointerEventInfo, opts: OnDragFromToolbarToCreateShapesOpts): void;
 
 // @public
@@ -2325,6 +2356,11 @@ export interface OnDragFromToolbarToCreateShapesOpts {
     createShape(id: TLShapeId): void;
     onDragEnd?(id: TLShapeId): void;
 }
+
+// @public
+export const optionalTools: {
+    readonly VoiceTool: typeof VoiceTool;
+};
 
 // @public (undocumented)
 export function OvalToolbarItem(): JSX.Element;
@@ -2764,6 +2800,9 @@ export function setStrokePointRadii(strokePoints: StrokePoint[], options: Stroke
 
 // @public
 export function setVoiceApiKey(apiKey: string): void;
+
+// @public
+export function setVoiceChunkMergeMode(mode: ChunkMergeMode): void;
 
 // @public
 export function setVoiceModel(model: GeminiModelId): void;
@@ -5292,7 +5331,7 @@ export interface ToolbarItemProps {
 }
 
 // @public
-export function transcribeAudio(audioBlob: Blob, apiKey: string, model?: string): Promise<string>;
+export function transcribeAudio(audioBlob: Blob, apiKey: string, model?: string, signal?: AbortSignal): Promise<string>;
 
 // @public (undocumented)
 export function TrapezoidToolbarItem(): JSX.Element;
@@ -5587,6 +5626,15 @@ export class VoiceTool extends StateNode {
 
 // @public (undocumented)
 export function VoiceToolbarItem(): JSX.Element;
+
+// @public
+export interface VoiceToolConfig {
+    createAudioRecorder?: () => IAudioRecorder;
+    getApiKey?: () => null | string;
+    getChunkMergeMode?: () => ChunkMergeMode;
+    getModel?: () => string;
+    transcriptionService?: ITranscriptionService;
+}
 
 // @public (undocumented)
 export function XBoxToolbarItem(): JSX.Element;

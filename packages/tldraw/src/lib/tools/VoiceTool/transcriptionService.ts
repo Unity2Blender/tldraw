@@ -53,13 +53,15 @@ async function blobToBase64(blob: Blob): Promise<string> {
  * @param audioBlob - The audio blob to transcribe
  * @param apiKey - The Gemini API key
  * @param model - The Gemini model to use
+ * @param signal - Optional AbortSignal for cancellation
  * @returns The transcribed text
  * @public
  */
 export async function transcribeAudio(
 	audioBlob: Blob,
 	apiKey: string,
-	model: string = DEFAULT_MODEL
+	model: string = DEFAULT_MODEL,
+	signal?: AbortSignal
 ): Promise<string> {
 	const base64Audio = await blobToBase64(audioBlob)
 	const mimeType = audioBlob.type || 'audio/webm'
@@ -92,6 +94,7 @@ export async function transcribeAudio(
 					maxOutputTokens: 8192,
 				},
 			}),
+			signal,
 		}
 	)
 

@@ -60,6 +60,11 @@ export class Recording extends StateNode {
 		this.cancel()
 	}
 
+	override onInterrupt() {
+		// Tool was interrupted (user switched tools) - cancel recording
+		this.cancel()
+	}
+
 	override onComplete() {
 		this.complete()
 	}
@@ -71,7 +76,7 @@ export class Recording extends StateNode {
 		}
 
 		try {
-			const audioBlob = await this.recorder.stop()
+			const result = await this.recorder.stop()
 			const recordingDuration = Date.now() - this.recordingStartTime
 
 			// Minimum recording duration of 500ms
@@ -85,7 +90,10 @@ export class Recording extends StateNode {
 				return
 			}
 
-			this.parent.transition('processing', { audioBlob })
+			this.parent.transition('processing', {
+				audioBlob: result.blob,
+				chunks: result.chunks,
+			})
 		} catch (error) {
 			console.error('Failed to stop recording:', error)
 			this.parent.transition('idle')

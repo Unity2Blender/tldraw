@@ -111,19 +111,105 @@ The tool communicates with the UI via editor events:
 | `open-voice-settings` | Tool → UI | Open settings dialog |
 | `show-toast` | Tool → UI | Show toast notification |
 
-## Files
+## Optional tool
 
+VoiceTool is **not included by default** in tldraw. To enable it:
+
+```tsx
+import { Tldraw, VoiceTool, defaultTools } from 'tldraw'
+
+// Include voice tool explicitly
+<Tldraw tools={[...defaultTools, VoiceTool]} />
+
+// Or use the optionalTools export
+import { optionalTools } from 'tldraw'
+<Tldraw tools={[...defaultTools, optionalTools.VoiceTool]} />
 ```
-VoiceTool/
-├── CONTEXT.md              # This file
-├── VoiceTool.ts            # Main tool StateNode
-├── audioRecorder.ts        # MediaRecorder wrapper
-├── transcriptionService.ts # Gemini API client
-├── voiceSettings.ts        # LocalStorage settings
-└── childStates/
-    ├── Idle.ts             # Idle state
-    ├── Recording.ts        # Recording state
-    └── Processing.ts       # Processing state
+
+## Long recordings & chunking
+
+Recordings over 45 seconds are automatically split into chunks:
+- Each chunk is transcribed in parallel for faster processing
+- User preference controls output format:
+  - **Individual mode** (default): Creates separate sticky notes per chunk
+  - **Merged mode**: Combines all text into one note
+
+Configure via Voice Settings dialog or programmatically:
+```typescript
+import { setVoiceChunkMergeMode } from 'tldraw'
+setVoiceChunkMergeMode('merged') // or 'individual'
+```
+
+## Types & interfaces
+
+The tool exports interfaces for dependency injection and testing:
+
+```typescript
+// types.ts
+interface IAudioRecorder {
+  start(onChunk?: OnChunkCallback): Promise<void>
+  stop(): Promise<AudioRecordingResult>
+  cancel(): void
+}
+
+interface ITranscriptionService {
+  transcribe(audioBlob: Blob, apiKey: string, model: string, signal?: AbortSignal): Promise<string>
+}
+
+type ChunkMergeMode = 'individual' | 'merged'
+```
+
+## Testing
+
+### Running tests
+
+```bash
+cd packages/tldraw
+yarn test run VoiceTool
+```
+
+### Test setup
+
+VoiceTool tests require explicit registration (since it's optional):
+
+```typescript
+import { TestEditor } from '../../../test/TestEditor'
+import { VoiceTool } from './VoiceTool'
+
+beforeEach(() => {
+  editor = new TestEditor({ tools: [VoiceTool] })
+})
+```
+
+### Mock implementations
+
+Mock classes are provided in `__mocks__/`:
+
+```typescript
+import { MockAudioRecorder, createMockAudioRecorder } from './__mocks__/audioRecorder'
+import { MockTranscriptionService, createMockTranscriptionService } from './__mocks__/transcriptionService'
+
+// Configure mock behavior
+const recorder = createMockAudioRecorder()
+recorder.startError = new Error('Permission denied')
+
+const transcriber = createMockTranscriptionService()
+transcriber.mockTranscription = 'Hello world'
+transcriber.transcribeDelay = 1000 // Simulate network latency
+```
+
+### Testing chunking
+
+```typescript
+const recorder = createMockAudioRecorder()
+recorder.setMockChunks([
+  new Blob(['chunk1'], { type: 'audio/webm' }),
+  new Blob(['chunk2'], { type: 'audio/webm' }),
+  new Blob(['chunk3'], { type: 'audio/webm' }),
+])
+
+const transcriber = createMockTranscriptionService()
+transcriber.queueTranscriptions('First segment', 'Second segment', 'Third segment')
 ```
 
 ## CSS classes
@@ -139,3 +225,23 @@ All overlay styles use the `tlui-voice-recording-overlay` prefix:
 - `.tlui-voice-recording-overlay__button` - Base button style
 - `.tlui-voice-recording-overlay__button--stop` - Stop button
 - `.tlui-voice-recording-overlay__button--cancel` - Cancel button
+
+## Files
+
+```
+VoiceTool/
+├── CONTEXT.md                  # This file
+├── VoiceTool.ts                # Main tool StateNode
+├── VoiceTool.test.ts           # Integration tests
+├── audioRecorder.ts            # MediaRecorder wrapper with chunking
+├── transcriptionService.ts     # Gemini API client
+├── voiceSettings.ts            # LocalStorage settings
+├── types.ts                    # TypeScript interfaces for DI
+├── childStates/
+│   ├── Idle.ts                 # Idle state
+│   ├── Recording.ts            # Recording state with chunk support
+│   └── Processing.ts           # Processing state with parallel chunks
+└── __mocks__/
+    ├── audioRecorder.ts        # Mock AudioRecorder for tests
+    └── transcriptionService.ts # Mock TranscriptionService for tests
+```

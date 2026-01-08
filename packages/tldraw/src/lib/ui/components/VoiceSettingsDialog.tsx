@@ -1,10 +1,13 @@
 import { useState } from 'react'
 import { GEMINI_MODELS, GeminiModelId } from '../../tools/VoiceTool/transcriptionService'
+import type { ChunkMergeMode } from '../../tools/VoiceTool/types'
 import {
 	clearVoiceApiKey,
 	getVoiceApiKey,
+	getVoiceChunkMergeMode,
 	getVoiceModel,
 	setVoiceApiKey,
+	setVoiceChunkMergeMode,
 	setVoiceModel,
 } from '../../tools/VoiceTool/voiceSettings'
 import { TLUiDialogProps } from '../context/dialogs'
@@ -22,6 +25,8 @@ import {
 export function VoiceSettingsDialog({ onClose }: TLUiDialogProps) {
 	const [apiKey, setApiKeyState] = useState(getVoiceApiKey() || '')
 	const [model, setModelState] = useState<GeminiModelId>(getVoiceModel())
+	const [chunkMergeMode, setChunkMergeModeState] =
+		useState<ChunkMergeMode>(getVoiceChunkMergeMode())
 	const [showApiKey, setShowApiKey] = useState(false)
 
 	const handleSave = () => {
@@ -31,6 +36,7 @@ export function VoiceSettingsDialog({ onClose }: TLUiDialogProps) {
 			clearVoiceApiKey()
 		}
 		setVoiceModel(model)
+		setVoiceChunkMergeMode(chunkMergeMode)
 		onClose()
 	}
 
@@ -80,6 +86,23 @@ export function VoiceSettingsDialog({ onClose }: TLUiDialogProps) {
 					</select>
 					<p className="tlui-voice-settings-dialog__hint">
 						{GEMINI_MODELS.find((m) => m.id === model)?.description}
+					</p>
+				</div>
+
+				<div className="tlui-voice-settings-dialog__section">
+					<label className="tlui-voice-settings-dialog__label">Long recordings</label>
+					<select
+						className="tlui-voice-settings-dialog__select"
+						value={chunkMergeMode}
+						onChange={(e) => setChunkMergeModeState(e.target.value as ChunkMergeMode)}
+					>
+						<option value="individual">Create separate notes for each segment</option>
+						<option value="merged">Combine all text into one note</option>
+					</select>
+					<p className="tlui-voice-settings-dialog__hint">
+						{chunkMergeMode === 'individual'
+							? 'Recordings over 45 seconds will create multiple sticky notes, one per segment.'
+							: 'All segments will be merged into a single sticky note with the full transcription.'}
 					</p>
 				</div>
 			</TldrawUiDialogBody>

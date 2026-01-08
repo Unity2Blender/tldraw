@@ -13,6 +13,10 @@ export class Idle extends StateNode {
 		this.editor.setCurrentTool('select')
 	}
 
+	override onInterrupt() {
+		// Nothing to clean up in idle state
+	}
+
 	override onPointerDown(info: TLPointerEventInfo) {
 		const apiKey = getVoiceApiKey()
 		if (!apiKey) {

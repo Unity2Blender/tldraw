@@ -97,6 +97,7 @@ export { defaultShapeTools } from './lib/defaultShapeTools'
 export { defaultShapeUtils } from './lib/defaultShapeUtils'
 export { registerDefaultSideEffects } from './lib/defaultSideEffects'
 export { defaultTools } from './lib/defaultTools'
+export { optionalTools } from './lib/optionalTools'
 export {
 	type ArrowShapeOptions,
 	type TLArcArrowInfo,
@@ -219,10 +220,20 @@ export {
 	type GeminiModelId,
 } from './lib/tools/VoiceTool/transcriptionService'
 export {
+	type AudioRecordingResult,
+	type ChunkMergeMode,
+	type IAudioRecorder,
+	type ITranscriptionService,
+	type OnChunkCallback,
+	type VoiceToolConfig,
+} from './lib/tools/VoiceTool/types'
+export {
 	clearVoiceApiKey,
 	getVoiceApiKey,
+	getVoiceChunkMergeMode,
 	getVoiceModel,
 	setVoiceApiKey,
+	setVoiceChunkMergeMode,
 	setVoiceModel,
 } from './lib/tools/VoiceTool/voiceSettings'
 export { VoiceTool } from './lib/tools/VoiceTool/VoiceTool'
