@@ -38,6 +38,7 @@ export function DefaultToolbarContent() {
 			<LineToolbarItem />
 			<HighlightToolbarItem />
 			<LaserToolbarItem />
+			<VoiceToolbarItem />
 			<FrameToolbarItem />
 		</>
 	)
@@ -222,4 +223,9 @@ export function FrameToolbarItem() {
 /** @public @react */
 export function LaserToolbarItem() {
 	return <ToolbarItem tool="laser" />
+}
+
+/** @public @react */
+export function VoiceToolbarItem() {
+	return <ToolbarItem tool="voice" />
 }

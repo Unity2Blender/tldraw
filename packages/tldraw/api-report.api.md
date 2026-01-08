@@ -407,6 +407,13 @@ export function AssetUrlsProvider({ assetUrls, children, }: {
     children: React.ReactNode;
 }): JSX.Element;
 
+// @public
+export class AudioRecorder {
+    cancel(): void;
+    start(): Promise<void>;
+    stop(): Promise<Blob>;
+}
+
 // @public (undocumented)
 export interface BasePathBuilderOpts {
     // (undocumented)
@@ -534,6 +541,9 @@ export function CheckBoxToolbarItem(): JSX.Element;
 
 // @public
 export function clearArrowTargetState(editor: Editor): void;
+
+// @public
+export function clearVoiceApiKey(): void;
 
 // @public (undocumented)
 export function ClipboardMenuGroup(): JSX.Element;
@@ -863,6 +873,9 @@ export const DEFAULT_MAX_ASSET_SIZE: number;
 export const DEFAULT_MAX_IMAGE_DIMENSION = 5000;
 
 // @public (undocumented)
+export const DEFAULT_MODEL: GeminiModelId;
+
+// @public (undocumented)
 export const DefaultA11yAnnouncer: NamedExoticComponent<object>;
 
 // @public (undocumented)
@@ -1073,7 +1086,7 @@ export interface DefaultToolbarProps {
 }
 
 // @public (undocumented)
-export const defaultTools: readonly [typeof EraserTool, typeof HandTool, typeof LaserTool, typeof ZoomTool, typeof SelectTool];
+export const defaultTools: readonly [typeof EraserTool, typeof HandTool, typeof LaserTool, typeof VoiceTool, typeof ZoomTool, typeof SelectTool];
 
 // @public (undocumented)
 export const DefaultVideoToolbar: NamedExoticComponent<TLUiVideoToolbarProps>;
@@ -1610,6 +1623,28 @@ export class FrameShapeUtil extends BaseBoxShapeUtil<TLFrameShape> {
 // @public (undocumented)
 export function FrameToolbarItem(): JSX.Element;
 
+// @public
+export const GEMINI_MODELS: readonly [{
+    readonly description: "Fast, stable, good quality";
+    readonly id: "gemini-2.5-flash";
+    readonly name: "Gemini 2.5 Flash (Recommended)";
+}, {
+    readonly description: "Fastest, lowest cost";
+    readonly id: "gemini-2.5-flash-lite";
+    readonly name: "Gemini 2.5 Flash Lite";
+}, {
+    readonly description: "Highest quality, slower";
+    readonly id: "gemini-2.5-pro";
+    readonly name: "Gemini 2.5 Pro";
+}, {
+    readonly description: "Legacy stable";
+    readonly id: "gemini-2.0-flash";
+    readonly name: "Gemini 2.0 Flash";
+}];
+
+// @public (undocumented)
+export type GeminiModelId = (typeof GEMINI_MODELS)[number]['id'];
+
 // @public (undocumented)
 export class GeoShapeTool extends StateNode {
     // (undocumented)
@@ -1827,6 +1862,12 @@ export function getUncroppedSize(shapeSize: {
     h: number;
     w: number;
 };
+
+// @public
+export function getVoiceApiKey(): null | string;
+
+// @public
+export function getVoiceModel(): GeminiModelId;
 
 // @public (undocumented)
 export function GroupMenuItem(): JSX.Element | null;
@@ -2720,6 +2761,12 @@ export function setDefaultUiAssetUrls(urls: TLUiAssetUrls): void;
 
 // @public (undocumented)
 export function setStrokePointRadii(strokePoints: StrokePoint[], options: StrokeOptions): StrokePoint[];
+
+// @public
+export function setVoiceApiKey(apiKey: string): void;
+
+// @public
+export function setVoiceModel(model: GeminiModelId): void;
 
 // @public (undocumented)
 export interface SolidPathBuilderOpts extends BasePathBuilderOpts {
@@ -5244,6 +5291,9 @@ export interface ToolbarItemProps {
     tool: string;
 }
 
+// @public
+export function transcribeAudio(audioBlob: Blob, apiKey: string, model?: string): Promise<string>;
+
 // @public (undocumented)
 export function TrapezoidToolbarItem(): JSX.Element;
 
@@ -5520,6 +5570,23 @@ export class VideoShapeUtil extends BaseBoxShapeUtil<TLVideoShape> {
 
 // @public (undocumented)
 export function ViewSubmenu(): JSX.Element;
+
+// @public (undocumented)
+export class VoiceTool extends StateNode {
+    // (undocumented)
+    static children(): TLStateNodeConstructor[];
+    // (undocumented)
+    static id: string;
+    // (undocumented)
+    static initial: string;
+    // (undocumented)
+    static isLockable: boolean;
+    // (undocumented)
+    onEnter(): void;
+}
+
+// @public (undocumented)
+export function VoiceToolbarItem(): JSX.Element;
 
 // @public (undocumented)
 export function XBoxToolbarItem(): JSX.Element;

@@ -11,7 +11,9 @@ import {
 } from '@tldraw/editor'
 import * as React from 'react'
 import { startEditingShapeWithRichText } from '../../tools/SelectTool/selectHelpers'
+import { getVoiceApiKey } from '../../tools/VoiceTool/voiceSettings'
 import { EmbedDialog } from '../components/EmbedDialog'
+import { VoiceSettingsDialog } from '../components/VoiceSettingsDialog'
 import { TLUiIconJsx } from '../components/primitives/TldrawUiIcon'
 import { useA11y } from '../context/a11y'
 import { TLUiEventSource, useUiEvents } from '../context/events'
@@ -283,6 +285,28 @@ export function ToolsProvider({ overrides, children }: TLUiToolsProviderProps) {
 				kbd: 'k',
 				onSelect(source) {
 					editor.setCurrentTool('laser')
+					onToolSelect(source, this)
+				},
+			},
+			{
+				id: 'voice',
+				label: 'tool.voice' as TLUiTranslationKey,
+				icon: (
+					<div className="tlui-icon tlui-icon__voice">
+						<svg viewBox="0 0 30 30" fill="currentColor">
+							<path d="M15 4a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V7a3 3 0 0 0-3-3zm0 2a1 1 0 0 1 1 1v8a1 1 0 1 1-2 0V7a1 1 0 0 1 1-1z" />
+							<path d="M9 13a1 1 0 0 0-2 0 8 8 0 0 0 7 7.93V24h-3a1 1 0 1 0 0 2h8a1 1 0 1 0 0-2h-3v-3.07A8 8 0 0 0 23 13a1 1 0 1 0-2 0 6 6 0 0 1-12 0z" />
+						</svg>
+					</div>
+				) as TLUiIconJsx,
+				kbd: 'shift+v',
+				onSelect(source) {
+					const apiKey = getVoiceApiKey()
+					if (!apiKey) {
+						helpers.addDialog({ component: VoiceSettingsDialog })
+					} else {
+						editor.setCurrentTool('voice')
+					}
 					onToolSelect(source, this)
 				},
 			},

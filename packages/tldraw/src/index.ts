@@ -211,6 +211,21 @@ export { HandTool } from './lib/tools/HandTool/HandTool'
 export { LaserTool } from './lib/tools/LaserTool/LaserTool'
 export { getHitShapeOnCanvasPointerDown } from './lib/tools/selection-logic/getHitShapeOnCanvasPointerDown'
 export { SelectTool } from './lib/tools/SelectTool/SelectTool'
+export { AudioRecorder } from './lib/tools/VoiceTool/audioRecorder'
+export {
+	DEFAULT_MODEL,
+	GEMINI_MODELS,
+	transcribeAudio,
+	type GeminiModelId,
+} from './lib/tools/VoiceTool/transcriptionService'
+export {
+	clearVoiceApiKey,
+	getVoiceApiKey,
+	getVoiceModel,
+	setVoiceApiKey,
+	setVoiceModel,
+} from './lib/tools/VoiceTool/voiceSettings'
+export { VoiceTool } from './lib/tools/VoiceTool/VoiceTool'
 export { ZoomTool } from './lib/tools/ZoomTool/ZoomTool'
 export {
 	setDefaultUiAssetUrls,
@@ -549,6 +564,7 @@ export {
 	TrapezoidToolbarItem,
 	TriangleToolbarItem,
 	useIsToolSelected,
+	VoiceToolbarItem,
 	XBoxToolbarItem,
 	type ToolbarItemProps,
 } from './lib/ui/components/Toolbar/DefaultToolbarContent'
