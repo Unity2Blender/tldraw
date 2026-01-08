@@ -269,6 +269,7 @@ export function getAssetUrlsByImport(opts) {
 			'tool-pointer': iconsIcon0MergedSvg2 + '#tool-pointer',
 			'tool-screenshot': iconsIcon0MergedSvg2 + '#tool-screenshot',
 			'tool-text': iconsIcon0MergedSvg2 + '#tool-text',
+			'tool-voice': iconsIcon0MergedSvg2 + '#tool-voice',
 			trash: iconsIcon0MergedSvg2 + '#trash',
 			twitter: iconsIcon0MergedSvg2 + '#twitter',
 			underline: iconsIcon0MergedSvg2 + '#underline',

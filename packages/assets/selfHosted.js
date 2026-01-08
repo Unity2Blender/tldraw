@@ -186,6 +186,7 @@ export function getAssetUrls(opts) {
 			'tool-pointer': iconsIcon0MergedSvg + '#tool-pointer',
 			'tool-screenshot': iconsIcon0MergedSvg + '#tool-screenshot',
 			'tool-text': iconsIcon0MergedSvg + '#tool-text',
+			'tool-voice': iconsIcon0MergedSvg + '#tool-voice',
 			trash: iconsIcon0MergedSvg + '#trash',
 			twitter: iconsIcon0MergedSvg + '#twitter',
 			underline: iconsIcon0MergedSvg + '#underline',

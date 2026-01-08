@@ -152,6 +152,7 @@ export type TLUiIconType =
 	| 'tool-pointer'
 	| 'tool-screenshot'
 	| 'tool-text'
+	| 'tool-voice'
 	| 'trash'
 	| 'twitter'
 	| 'underline'
@@ -316,6 +317,7 @@ export const iconTypes = [
 	'tool-pointer',
 	'tool-screenshot',
 	'tool-text',
+	'tool-voice',
 	'trash',
 	'twitter',
 	'underline',

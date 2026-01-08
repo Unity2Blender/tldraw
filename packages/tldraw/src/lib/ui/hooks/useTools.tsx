@@ -288,33 +288,21 @@ export function ToolsProvider({ overrides, children }: TLUiToolsProviderProps) {
 					onToolSelect(source, this)
 				},
 			},
-			// Voice tool is only included if it's registered with the editor (opt-in)
-			...(editor.root.children?.voice
-				? [
-						{
-							id: 'voice',
-							label: 'tool.voice' as TLUiTranslationKey,
-							icon: (
-								<div className="tlui-icon tlui-icon__voice">
-									<svg viewBox="0 0 30 30" fill="currentColor">
-										<path d="M15 4a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V7a3 3 0 0 0-3-3zm0 2a1 1 0 0 1 1 1v8a1 1 0 1 1-2 0V7a1 1 0 0 1 1-1z" />
-										<path d="M9 13a1 1 0 0 0-2 0 8 8 0 0 0 7 7.93V24h-3a1 1 0 1 0 0 2h8a1 1 0 1 0 0-2h-3v-3.07A8 8 0 0 0 23 13a1 1 0 1 0-2 0 6 6 0 0 1-12 0z" />
-									</svg>
-								</div>
-							) as TLUiIconJsx,
-							kbd: 'shift+m',
-							onSelect(source: TLUiEventSource) {
-								const apiKey = getVoiceApiKey()
-								if (!apiKey) {
-									helpers.addDialog({ component: VoiceSettingsDialog })
-								} else {
-									editor.setCurrentTool('voice')
-								}
-								onToolSelect(source, this as TLUiToolItem<TLUiTranslationKey, TLUiIconType>)
-							},
-						} as TLUiToolItem<TLUiTranslationKey, TLUiIconType>,
-					]
-				: []),
+			{
+				id: 'voice',
+				label: 'tool.voice',
+				icon: 'tool-voice',
+				kbd: 'shift+m',
+				onSelect(source) {
+					const apiKey = getVoiceApiKey()
+					if (!apiKey) {
+						helpers.addDialog({ component: VoiceSettingsDialog })
+					} else {
+						editor.setCurrentTool('voice')
+					}
+					onToolSelect(source, this)
+				},
+			},
 			{
 				id: 'embed',
 				label: 'tool.embed',

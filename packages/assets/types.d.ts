@@ -172,6 +172,7 @@ export type AssetUrls = {
 		'tool-pointer': string
 		'tool-screenshot': string
 		'tool-text': string
+		'tool-voice': string
 		trash: string
 		twitter: string
 		underline: string
