@@ -2119,6 +2119,127 @@ tldraw? probably.
 	height: 14px;
 }
 
+/* ------------------- Voice Recording Overlay ------------------- */
+
+.tlui-voice-recording-overlay {
+	position: absolute;
+	bottom: 60px;
+	left: 50%;
+	transform: translateX(-50%);
+	z-index: var(--tl-layer-menus);
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 8px;
+	padding: 12px 16px;
+	background-color: var(--tl-color-panel);
+	border-radius: var(--tl-radius-3);
+	box-shadow: var(--tl-shadow-2);
+	pointer-events: all;
+	animation: tlui-voice-overlay-fade-in 150ms ease-out;
+}
+
+.tlui-voice-recording-overlay__status {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.tlui-voice-recording-overlay__dot {
+	width: 10px;
+	height: 10px;
+	border-radius: 50%;
+	background-color: var(--tl-color-danger);
+	animation: tlui-voice-pulse 1s ease-in-out infinite;
+}
+
+.tlui-voice-recording-overlay__spinner {
+	width: 16px;
+	height: 16px;
+	border: 2px solid var(--tl-color-muted-1);
+	border-top-color: var(--tl-color-text-1);
+	border-radius: 50%;
+	animation: tlui-voice-spin 0.8s linear infinite;
+}
+
+.tlui-voice-recording-overlay__label {
+	font-size: 13px;
+	font-weight: 500;
+	color: var(--tl-color-text-1);
+}
+
+.tlui-voice-recording-overlay__time {
+	font-size: 13px;
+	font-weight: 600;
+	color: var(--tl-color-text-1);
+	font-variant-numeric: tabular-nums;
+	min-width: 36px;
+}
+
+.tlui-voice-recording-overlay__actions {
+	display: flex;
+	gap: 8px;
+}
+
+.tlui-voice-recording-overlay__button {
+	padding: 6px 12px;
+	font-size: 12px;
+	font-weight: 500;
+	border: none;
+	border-radius: var(--tl-radius-2);
+	cursor: pointer;
+	transition: background-color 0.15s ease;
+}
+
+.tlui-voice-recording-overlay__button--stop {
+	background-color: var(--tl-color-primary);
+	color: var(--tl-color-primary-contrast);
+}
+
+.tlui-voice-recording-overlay__button--stop:hover {
+	background-color: var(--tl-color-primary-hover);
+}
+
+.tlui-voice-recording-overlay__button--cancel {
+	background-color: var(--tl-color-muted-2);
+	color: var(--tl-color-text-1);
+}
+
+.tlui-voice-recording-overlay__button--cancel:hover {
+	background-color: var(--tl-color-muted-1);
+}
+
+@keyframes tlui-voice-pulse {
+	0%, 100% {
+		opacity: 1;
+		transform: scale(1);
+	}
+	50% {
+		opacity: 0.6;
+		transform: scale(1.1);
+	}
+}
+
+@keyframes tlui-voice-spin {
+	from {
+		transform: rotate(0deg);
+	}
+	to {
+		transform: rotate(360deg);
+	}
+}
+
+@keyframes tlui-voice-overlay-fade-in {
+	from {
+		opacity: 0;
+		transform: translateX(-50%) translateY(10px);
+	}
+	to {
+		opacity: 1;
+		transform: translateX(-50%) translateY(0);
+	}
+}
+
 /* ------------------- Animations ------------------- */
 @keyframes tlui-fade-out {
 	0% {

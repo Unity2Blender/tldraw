@@ -5,7 +5,8 @@ export class Idle extends StateNode {
 	static override id = 'idle'
 
 	override onEnter() {
-		this.editor.setCursor({ type: 'default', rotation: 0 })
+		// Use cross cursor to indicate "click to record"
+		this.editor.setCursor({ type: 'cross', rotation: 0 })
 	}
 
 	override onCancel() {
@@ -18,6 +19,7 @@ export class Idle extends StateNode {
 			this.editor.emit('open-voice-settings' as any, {})
 			return
 		}
+		// Start recording on click (toggle mode)
 		this.parent.transition('recording', info)
 	}
 }

@@ -1,4 +1,4 @@
-import { StateNode } from '@tldraw/editor'
+import { StateNode, TLPointerEventInfo } from '@tldraw/editor'
 import { AudioRecorder } from '../audioRecorder'
 
 export class Recording extends StateNode {
@@ -6,9 +6,21 @@ export class Recording extends StateNode {
 
 	private recorder: AudioRecorder | null = null
 	private recordingStartTime = 0
+	private stopListener: (() => void) | null = null
+	private cancelListener: (() => void) | null = null
 
 	override async onEnter() {
-		this.editor.setCursor({ type: 'grabbing', rotation: 0 })
+		this.editor.setCursor({ type: 'cross', rotation: 0 })
+
+		// Listen for stop/cancel events from the UI overlay
+		const handleStop = () => this.complete()
+		const handleCancel = () => this.cancel()
+
+		this.editor.addListener('voice-stop' as any, handleStop)
+		this.editor.addListener('voice-cancel' as any, handleCancel)
+
+		this.stopListener = () => this.editor.removeListener('voice-stop' as any, handleStop)
+		this.cancelListener = () => this.editor.removeListener('voice-cancel' as any, handleCancel)
 
 		try {
 			this.recorder = new AudioRecorder()
@@ -27,9 +39,20 @@ export class Recording extends StateNode {
 
 	override onExit() {
 		this.editor.setCursor({ type: 'default', rotation: 0 })
+
+		// Clean up event listeners
+		if (this.stopListener) {
+			this.stopListener()
+			this.stopListener = null
+		}
+		if (this.cancelListener) {
+			this.cancelListener()
+			this.cancelListener = null
+		}
 	}
 
-	override onPointerUp() {
+	// Toggle mode: clicking again stops recording
+	override onPointerDown(_info: TLPointerEventInfo) {
 		this.complete()
 	}
 
@@ -53,6 +76,11 @@ export class Recording extends StateNode {
 
 			// Minimum recording duration of 500ms
 			if (recordingDuration < 500) {
+				this.editor.emit('show-toast' as any, {
+					title: 'Recording too short',
+					description: 'Please record for at least half a second.',
+					severity: 'warning',
+				})
 				this.parent.transition('idle')
 				return
 			}

@@ -30,6 +30,14 @@ export class Processing extends StateNode {
 
 			if (transcription && transcription.trim()) {
 				this.createNoteShape(transcription)
+				// Show success toast with transcription preview
+				const preview =
+					transcription.length > 50 ? transcription.slice(0, 50) + '...' : transcription
+				this.editor.emit('show-toast' as any, {
+					title: 'Transcription complete',
+					description: preview,
+					severity: 'success',
+				})
 			} else {
 				this.editor.emit('show-toast' as any, {
 					title: 'No transcription',

@@ -299,7 +299,7 @@ export function ToolsProvider({ overrides, children }: TLUiToolsProviderProps) {
 						</svg>
 					</div>
 				) as TLUiIconJsx,
-				kbd: 'shift+v',
+				kbd: 'shift+m',
 				onSelect(source) {
 					const apiKey = getVoiceApiKey()
 					if (!apiKey) {
